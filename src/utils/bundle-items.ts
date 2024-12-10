@@ -1,5 +1,5 @@
 import { SidebarItemProps, SidebarProps, SidebarGroupEnum } from '@/utils/type';
-import { jsItems, reactItems, domItems, systemDesignItems, databaseItems } from '@/utils/item-util';
+import { jsItems, reactItems, domItems, systemDesignItems, databaseItems, lldItems } from '@/utils/item-util';
 
 export const notesHash: { [key in SidebarGroupEnum]: SidebarItemProps[] } = {
   [SidebarGroupEnum.HLD]: systemDesignItems,
@@ -7,7 +7,7 @@ export const notesHash: { [key in SidebarGroupEnum]: SidebarItemProps[] } = {
   [SidebarGroupEnum.REACT]: reactItems,
   [SidebarGroupEnum.DOM]: domItems,
   [SidebarGroupEnum.DATABASE]: databaseItems,
-  [SidebarGroupEnum.BACKEND]: [],
+  [SidebarGroupEnum.LLD]: lldItems,
 };
 
 function getSideBarItems(folder: SidebarGroupEnum): SidebarItemProps[] {

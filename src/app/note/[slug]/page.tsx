@@ -11,7 +11,7 @@ const options = {
 }
 
 export async function generateStaticParams() {
-  const dirs = ['frontend', 'system-design', 'database', 'backend'];
+  const dirs = ['frontend', 'system-design', 'database', 'LLD'];
   let paths: { slug: string }[] = [];
 
   for (const dir of dirs) {
@@ -39,7 +39,7 @@ export async function generateMetadata({ params } : { params : { slug : string }
 }
 
 function getPost({slug}:{slug : string}){
-  const directories = ['src/content/frontend', 'src/content/system-design', 'src/content/database', 'src/content/backend'];
+  const directories = ['src/content/frontend', 'src/content/system-design', 'src/content/database', 'src/content/lld'];
   let dir = '';
   for (const _d of directories) {
       if(fs.existsSync(path.join(process.cwd(), _d, slug + '.mdx'))){

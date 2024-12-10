@@ -29,7 +29,7 @@ const folderSections = [
     icon: <Database className="w-5 h-5 text-muted-foreground" />
   },
   {
-    title: SidebarGroupEnum.BACKEND,
+    title: SidebarGroupEnum.LLD,
     icon: <Code className="w-5 h-5 text-muted-foreground" />
   },
   {

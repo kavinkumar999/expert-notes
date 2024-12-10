@@ -134,4 +134,14 @@ export const databaseItems = [
     name: 'ACID',
     url: '/note/acid'
   }
-]
+];
+export const lldItems = [
+  {
+    name: 'Solid Principles',
+    url: '/note/solid-principles'
+  },
+  {
+    name: 'Design Principles',
+    url: '/note/design-principles'
+  }
+];

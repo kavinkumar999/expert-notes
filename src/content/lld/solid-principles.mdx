@@ -1,0 +1,332 @@
+---
+title: Solid Principles
+tags: lld
+---
+
+- **S** -> Single Responsibility Principle 
+- **O** -> Open/Closed Principle
+- **L** -> Liskov Substitution Principle 
+- **I** -> Interface Segregation Principle 
+- **D** -> Dependgigency Inversion Principle
+
+
+> SOLID is an acronym for object-oriented design principles. These principles enable the developer to create a simple, understandable, maintainable, scalable, modifiable, and efficient code
+
+## Single Responsibility Principle
+
+![Single Responsibility Principle](/archive-notes/png/lld/srp.png)
+
+- A class should always have one responsibility and there should be only a single reason to change it. 
+
+### Bad Implementation
+
+- Below Employee class is doing multiple things like calculating tax, saving employee details, etc. This is a violation of the Single Responsibility Principle.
+
+```java
+class Employee {
+    String name;
+    String address;
+    double salary;
+    public double calculateTax() {
+        return salary * 0.3;
+    }
+    public void save() {
+        // save the employee details
+    }
+}
+```
+
+### Good Implementation
+
+- Below Employee class is doing only one thing i.e. saving employee details. Tax calculation is moved to a separate class.
+
+```java
+class Employee {
+    String name;
+    String address;
+    double salary;
+    public void save() {
+        // save the employee details
+    }
+}
+
+class TaxCalculator {
+    public double calculateTax(Employee employee) {
+        return employee.salary * 0.3;
+    }
+}
+```
+
+## Open/Closed Principle
+
+![Open/Closed Principle](/archive-notes/png/lld/ocp.png)
+
+
+- A class should be open for extension but closed for modification.
+
+### Bad Implementation
+
+- Below `Shape` class is open for modification. If we want to add a new shape, we need to modify the `draw` method.
+
+```java
+class Shape {
+    String type;
+    public void draw() {
+        if (type.equals("circle")) {
+            // draw circle
+        } else if (type.equals("rectangle")) {
+            // draw rectangle
+        }
+    }
+}
+```
+
+### Good Implementation
+
+- Below `Shape` class is closed for modification. If we want to add a new shape, we can create a new class that extends the `Shape` class.
+
+```java
+abstract class Shape {
+    public abstract void draw();
+}
+
+class Circle extends Shape {
+    public void draw() {
+        // draw circle
+    }
+}
+
+class Rectangle extends Shape {
+    public void draw() {
+        // draw rectangle
+    }
+}
+```
+
+## Liskov Substitution Principle
+
+![Liskov Substitution Principle](/archive-notes/png/lld/lsp.png)
+
+- Objects of a superclass should be replaceable with objects of its subclasses without affecting the functionality of the program.
+
+### Bad Implementation
+
+- Below `Rectangle` class is a superclass and `Square` class is a subclass. A square is a rectangle but not exactly a rectangle. This is a violation of the Liskov Substitution Principle.
+
+```java
+class Rectangle {
+    protected int width;
+    protected int height;
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getArea() {
+        return width * height;
+    }
+}
+
+class Square extends Rectangle {
+    // A square has both width and height the same
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+        this.height = width;  // In a square, width and height must always be the same
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
+        this.width = height;  // In a square, width and height must always be the same
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(5);
+        rectangle.setHeight(10);
+        System.out.println("Rectangle Area: " + rectangle.getArea()); // 50
+
+        Rectangle square = new Square(); // Square is a Rectangle, but not exactly a rectangle
+        square.setWidth(5);
+        square.setHeight(10);
+        System.out.println("Square Area: " + square.getArea()); // Expected 50, but it's 100
+    }
+}
+```
+
+### Good Implementation
+
+- Below `Shape` interface is implemented by `Rectangle` and `Square` classes. A square is a shape and a rectangle is a shape. This is a good implementation of the Liskov Substitution Principle.
+
+```java
+interface Shape {
+    int getArea();
+}
+
+class Rectangle implements Shape {
+    protected int width;
+    protected int height;
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int getArea() {
+        return width * height;
+    }
+}
+
+class Square implements Shape {
+    private int side;
+
+    public void setSide(int side) {
+        this.side = side;
+    }
+
+    @Override
+    public int getArea() {
+        return side * side;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(5);
+        rectangle.setHeight(10);
+        System.out.println("Rectangle Area: " + rectangle.getArea()); // 50
+
+        Square square = new Square();
+        square.setSide(5);
+        System.out.println("Square Area: " + square.getArea()); // 25
+    }
+}
+```
+
+## Interface Segregation Principle
+
+![Interface Segregation Principle](/archive-notes/png/lld/isp.png)
+
+- A client should not be forced to implement an interface that it does not use.
+- Instead of one fat interface, many small cohesive interfaces are preferred.
+
+### Bad Implementation
+
+- Below `Printer` interface has two methods `print` and `scan`. `FaxMachine` class implements both methods. But `FaxMachine` class doesn't need the `print` method. This is a violation of the Interface Segregation Principle.
+
+```java
+interface Printer {
+    void print();
+    void scan();
+}
+
+class FaxMachine implements Printer {
+    @Override
+    public void print() {
+        // Dummary implementation
+    }
+
+    @Override
+    public void scan() {
+        System.out.println("Scanning...");
+    }
+}
+```
+
+### Good Implementation
+
+- Below `Printer` interface is split into two interfaces `Printable` and `Scannable`. `FaxMachine` class implements only the `Scannable` interface. This is a good implementation of the Interface Segregation Principle.
+
+```java
+interface Printable {
+    void print();
+}
+
+interface Scannable {
+    void scan();
+}
+
+class FaxMachine implements Scannable {
+    @Override
+    public void scan() {
+        System.out.println("Scanning...");
+    }
+}
+```
+
+> **Note**: Not to over engineer by creating too many interfaces. The goal is to create cohesive interfaces.
+
+## Dependency Inversion Principle
+
+![Dependency Inversion Principle](/archive-notes/png/lld/dip.png)
+
+- High-level modules should not depend on low-level modules. Both should depend on abstractions.
+- Abstractions should not depend on details(class). Details(class) should depend on abstractions.
+
+### Bad Implementation
+
+- Below `LightBulb` class is a low-level module and `Switch` class is a high-level module. `Switch` class depends on `LightBulb` class. This is a violation of the Dependency Inversion Principle.
+
+```java
+class LightBulb {
+    public void turnOn() {
+        System.out.println("LightBulb: Bulb turned on...");
+    }
+
+    public void turnOff() {
+        System.out.println("LightBulb: Bulb turned off...");
+    }
+}
+
+class Switch {
+    private LightBulb lightBulb;
+
+    public Switch() {
+        this.lightBulb = new LightBulb();
+    }
+
+    public void turnOn() {
+        lightBulb.turnOn();
+    }
+
+    public void turnOff() {
+        lightBulb.turnOff();
+    }
+}
+```
+
+### Good Implementation
+
+- Below `Switch` class depends on `Switchable` interface. `LightBulb` class implements the `Switchable` interface. This is a good implementation of the Dependency Inversion Principle.
+
+```java
+interface Switchable {
+    void turnOn();
+    void turnOff();
+}
+
+class LightBulb implements Switchable {
+    @Override
+    public void turnOn() {
+        System.out.println("LightBulb: Bulb turned on...");
+    }
+
+    @Override
+    public void turnOff() {
+        System.out.println("LightBulb: Bulb turned off...");
+    }
+}
+```
+
